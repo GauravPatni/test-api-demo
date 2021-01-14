@@ -26,7 +26,7 @@ api = Api(app)
 
 api.add_resource(API, '/api')
 
-print("Starting IrriCare-Pro V0.7")
-app.run(host='0.0.0.0', port=3005, debug=False)
+print("Starting api")
+# app.run(host='0.0.0.0', port=3005, debug=False)
 
 
