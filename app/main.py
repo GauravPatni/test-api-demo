@@ -21,11 +21,11 @@ class API(Resource):
 
     def post(self):
         req = request.get_json()
-        
+        print(req)
         if req:
           if "WZ" in req:
             return getData() , 200
-          return "Bad Request", 403
+          return "Bad Info Request", 403
         else:
             return "Bad Request", 403
 
