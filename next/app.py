@@ -5,6 +5,7 @@ import json
 para = {
     "WZ": "1"
 }
+usdt = 0
 
 
 def calAvgRate(trxList):
@@ -25,28 +26,55 @@ def calAvgRate(trxList):
     return [totalVol, totalVol/avgRt, avgRt]  # total , qty
 
 
+def calValue(trxList):
+    global usdt
+    total = len(trxList)
+    totalVal = 0
+    totalQty = 0
+    for i in range(total):
+        if (trxList[0][0] == "U"):
+            val = trxList[i][3]*79
+        else:
+            val = trxList[i][3]
+        totalVal = totalVal + val
+        totalQty = totalQty+trxList[i][1]
+
+    return [totalVal, totalQty,totalVal*0.004]
+
+
 def getSelData(resp):
-    print("\n")
+    global usdt
+
     filePath = r"data.json"
     with open(filePath, 'r') as file:  # file in local dir only
         userData = json.loads(file.read())
     if userData:
         avgRate = 0
-        adv =0
-        for key, val in userData.items():
+        adv = 0
+        by = userData["by"]
+        usdt = float(resp["usdtinr"]["last"])
+        print("USDT ", usdt)
+        print("\n")
+        for key, val in by.items():
             # print(f"{key} {val}")
-            initVal = calAvgRate(val)
+            stkData = calValue(val)
+            # print(stkData)
+            totalVal = stkData[0]
+            qty = stkData[1]
+            fees = stkData[2]
             curr = resp[key]
             tag = curr["base_unit"]
             last = float(curr["last"])
-            change = ((last/initVal[2])-1)*100
-            gain = initVal[0] * change/100 * 78.2
-            inrVol = initVal[1] * last *78.2
+            nowVal = qty*last*usdt
+            change = ((nowVal-totalVal)/totalVal)*100
+            gain = nowVal-totalVal -fees
+
             if(tag != "usdt"):
-                adv = adv+ gain
+                adv = adv + gain
                 print(
-                f"{tag}  \t {round(initVal[1],3)}    \t {round(initVal[0],3)}   \t {round(initVal[2],3)}     \t {round(last,3)}     \t{round(change,2)}      \t{round(inrVol,1)}      \t{round(gain,1)}   \t {round(adv,1)}")
-        print("\n Gain ",adv)
+                    f"{tag}  \t {round(last,3)}    \t {round(qty,3)}       \t {round(nowVal,3)}   \t {round(change,3)}     \t {round(gain,3)}")
+        print("\n Gain ", adv)
+
 
 resp = requests.post("https://test-wz-app.herokuapp.com/api", json=para,)
 data = resp.json()
