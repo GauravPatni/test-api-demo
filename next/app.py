@@ -33,14 +33,22 @@ def calValue(trxList):
     totalQty = 0
     for i in range(total):
         if (trxList[0][0] == "U"):
-            val = trxList[i][3]*79
+            val = trxList[i][3]*79.19
         else:
             val = trxList[i][3]
         totalVal = totalVal + val
         totalQty = totalQty+trxList[i][1]
 
-    return [totalVal, totalQty,totalVal*0.004]
+    return [totalVal, totalQty, totalVal*0.004]
 
+
+def calIn(trxIn):
+    total = len(trxIn)
+    totalVal = 0
+    for i in range(total):
+        totalVal =totalVal+trxIn[i]
+
+    return totalVal
 
 def getSelData(resp):
     global usdt
@@ -51,8 +59,11 @@ def getSelData(resp):
     if userData:
         avgRate = 0
         adv = 0
+        port = 0
+        nowVal =0
         by = userData["by"]
         usdt = float(resp["usdtinr"]["last"])
+        inVal = calIn(userData["dp"])
         print("USDT ", usdt)
         print("\n")
         for key, val in by.items():
@@ -65,15 +76,23 @@ def getSelData(resp):
             curr = resp[key]
             tag = curr["base_unit"]
             last = float(curr["last"])
-            nowVal = qty*last*usdt
-            change = ((nowVal-totalVal)/totalVal)*100
-            gain = nowVal-totalVal -fees
-
+            
+            
             if(tag != "usdt"):
+                
+                nowVal = qty*last*usdt
+                change = ((nowVal-totalVal)/totalVal)*100
+                gain = nowVal-totalVal - fees
                 adv = adv + gain
-                print(
-                    f"{tag}  \t {round(last,3)}    \t {round(qty,3)}       \t {round(nowVal,3)}   \t {round(change,3)}     \t {round(gain,3)}")
-        print("\n Gain ", adv)
+            else:
+                nowVal = qty*last
+                gain = 0
+                change =0
+            port = port + nowVal
+            print(
+                f"{tag}  \t {round(last,3)}    \t {round(qty,3)}       \t {round(nowVal,3)}   \t {round(change,3)}     \t {round(gain,3)}")
+        # print("\n Gain ", adv)
+        print(f"\n In {round(inVal,1)} \tPort {round(port,1)} \tDif {round((port - inVal),1)} \tGainCal {round(adv,1)}")
 
 
 resp = requests.post("https://test-wz-app.herokuapp.com/api", json=para,)
