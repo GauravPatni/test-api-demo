@@ -8,6 +8,26 @@ para = {
 usdt = 0
 
 
+def calProf(data):
+    global usdt
+    
+    txnProf = []
+    prof =0
+    for key, curr in data["sl"].items():
+        totalTxn = len(curr)
+        sum =0
+        
+        for tn in range(totalTxn):
+            if (curr[tn][0]=="U"):            
+                sum = sum+  (curr[tn][5] - curr[tn][3])*usdt*0.998
+            else:
+                sum =sum+  (curr[tn][5] - curr[tn][3])*0.998
+
+        prof = prof + sum   
+        print(f"{key} \t{round(sum,3)}")
+    
+    print(f"--------------------------\ntotal  \t\t{round(prof,3)}")
+
 def calAvgRate(trxList):
     total = len(trxList)
     totalVol = 0
@@ -92,8 +112,8 @@ def getSelData(resp):
             print(
                 f"{tag}  \t {round(last,3)}    \t {round(qty,3)}       \t {round(nowVal,3)}   \t {round(change,3)}     \t {round(gain,3)}")
         # print("\n Gain ", adv)
-        print(f"\n In {round(inVal,1)} \tPort {round(port,1)} \tDif {round((port - inVal),1)} \tGainCal {round(adv,1)}")
-
+        print(f"\n In {round(inVal,1)} \tPort {round(port,1)} \tDif {round((port - inVal),1)} \tGainCal {round(adv,1)} \tSl {(port - inVal)-adv}\n")
+        calProf(userData)
 
 resp = requests.post("https://test-wz-app.herokuapp.com/api", json=para,)
 data = resp.json()
