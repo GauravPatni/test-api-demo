@@ -53,7 +53,7 @@ def calValue(trxList):
     totalQty = 0
     for i in range(total):
         if (trxList[0][0] == "U"):
-            val = trxList[i][3]*79.19
+            val = trxList[i][3]*78.8
         else:
             val = trxList[i][3]
         totalVal = totalVal + val
@@ -99,11 +99,15 @@ def getSelData(resp):
             
             
             if(tag != "usdt"):
-                
-                nowVal = qty*last*usdt
-                change = ((nowVal-totalVal)/totalVal)*100
-                gain = nowVal-totalVal - fees
-                adv = adv + gain
+                if(qty == 0):
+                    nowVal =0
+                    change =0
+                    gain =0
+                else:
+                    nowVal = qty*last*usdt
+                    change = ((nowVal-totalVal)/totalVal)*100
+                    gain = nowVal-totalVal - fees
+                    adv = adv + gain
             else:
                 nowVal = qty*last
                 gain = 0
