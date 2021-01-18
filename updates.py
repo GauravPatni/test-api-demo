@@ -86,11 +86,14 @@ def preSupportedWzCurr():
 
 
 def Analyze():
-    rply = ""
+
+    rply = f"{'{0:<5}'.format('rank')}{'{0:<8}'.format('Sym')}{'{0:<30}'.format('Name')}{'{0:<10}'.format('Now')}{'{0:<20}'.format('%Pick')}{'{0:<8}'.format('1 hr')}{'{0:<8}'.format('%ALH')}\n\n"
+
     if (updateCurrStatus()):
         print(f"\n\n---------------{datetime.datetime.now()}\n")
         for key, val in gDict.items():
             sym = gDict[key]["symbol"]
+            rank = gDict[key]["market_cap_rank"]
             now = gDict[key]["current_price"]
             l24hHi = gDict[key]["high_24h"]
             ah = gDict[key]["ath"]
@@ -106,8 +109,7 @@ def Analyze():
             if((now) and (l24hHi) and (ah) and (ch1h)):
 
                 if(((ah > (now*1.06)) and (pickPer > 6)) or (ch1h > 6)):
-                    rply = rply + \
-                        f"{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<8}'.format(round(pickPer, 1))}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}\n"
+                    rply = rply + f"{'{0:<5}'.format(rank)}{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<10}'.format(now)}{'{0:<5}'.format(round(pickPer, 1))}{'{0:<14}'.format(f'( {l24hHi} )')}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}\n"
                     # print(f"{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<8}'.format(round(pickPer, 1))}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}")
         return rply
     return False
