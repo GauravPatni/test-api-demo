@@ -26,7 +26,8 @@ class UPD(Resource):
         print(req)
         if req:
             if "UD" in req:
-                return prepareReply(), 200
+                rply = prepareReply()
+                return Response(rply, mimetype='text/xml')
             return "Bad Info Request", 403
         else:
             return "Bad Request", 403
