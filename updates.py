@@ -19,7 +19,7 @@ class UPD(Resource):
 
     def get(self):
         print('Get  Updates V1')
-        return "Test API", 200
+        return "Test Updates V1", 200
 
     def post(self):
         req = request.get_json()
