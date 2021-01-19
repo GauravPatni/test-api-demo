@@ -34,7 +34,7 @@ class UPD(Resource):
 
 
 def updateCurrStatus():
-    global gIdList
+    global gIdList ,gDict
 
     try:
         mkDataList = []
@@ -46,11 +46,13 @@ def updateCurrStatus():
 
             for mkData in mkDataList:
                 gDict[mkData["id"]] = mkData
-            if (mkLen < 50):
+            if (len(mkDataList) == 0):
                 break
 
-        # print(f"Global Id   {len(gIdList)}")
-        # print(f"Global Dict {len(gDict)}")
+        print(f"Global Id   {len(gIdList)}")
+        print(f"Global Dict {len(gDict)}")
+        # for key,value in gDict.items():
+        #     print(key)
 
         return True
     except:
@@ -64,14 +66,15 @@ def preSupportedWzCurr():
     try:
         cSymbolList = cg.get_coins_list()
         cgLen = len(cSymbolList)
-        para = {"WZ": 1}
-        resp = requests.post(
-            "https://api.wazirx.com/api/v2/tickers", json=para,)
+        resp = requests.get("https://api.wazirx.com/api/v2/tickers")
         wData = resp.json()
+        # print(wData)
         if wData:
             for key, val in wData.items():
+
                 if(key[-4:] == "usdt"):
                     for cIndex in range(cgLen):
+
                         if (key[:-4] == cSymbolList[cIndex]["symbol"]):
                             gIdList.append(cSymbolList[cIndex]["id"])
 
@@ -92,6 +95,10 @@ def Analyze():
     if (updateCurrStatus()):
         print(f"\n\n---------------{datetime.datetime.now()}\n")
         for key, val in gDict.items():
+
+            if(key == 'curve-dao-token'):
+                print(key)
+
             sym = gDict[key]["symbol"]
             rank = gDict[key]["market_cap_rank"]
             now = gDict[key]["current_price"]
@@ -104,12 +111,14 @@ def Analyze():
 
             delT = datetime.datetime.now() - ahTimeDel
 
-            pickPer = ((l24hHi/now) - 1)*100
+            
 
-            if((now) and (l24hHi) and (ah) and (ch1h)):
+            if((rank) and (sym) and (now) and (l24hHi) and (ah) and (ch1h)):
+                pickPer = ((l24hHi/now) - 1)*100
 
                 if(((ah > (now*1.06)) and (pickPer > 6)) or (ch1h > 6)):
-                    rply = rply + f"{'{0:<5}'.format(rank)}{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<10}'.format(now)}{'{0:<5}'.format(round(pickPer, 1))}{'{0:<14}'.format(f'( {l24hHi} )')}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}\n"
+                    rply = rply + \
+                        f"{'{0:<5}'.format(rank)}{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<10}'.format(round(now,3))}{'{0:<5}'.format(round(pickPer, 1))}{'{0:<14}'.format(f'( {round(l24hHi,3)} )')}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}\n"
                     # print(f"{'{0:<8}'.format(sym)}{'{0:<30}'.format(key)}{'{0:<8}'.format(round(pickPer, 1))}{'{0:<8}'.format(round(ch1h, 1))}{'{0:<8}'.format(round(((ah/now - 1)*100), 2))}")
         return rply
     return False
