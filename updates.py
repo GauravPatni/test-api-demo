@@ -64,6 +64,7 @@ def preSupportedWzCurr():
     global gIdList
 
     try:
+        gIdList.clear()
         cSymbolList = cg.get_coins_list()
         cgLen = len(cSymbolList)
         resp = requests.get("https://api.wazirx.com/api/v2/tickers")
