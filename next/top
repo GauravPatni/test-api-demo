@@ -1,14 +1,14 @@
 DeFi
-	AAVE **	[L]
-	BAL	[L]
-	CEL  *	[L]
-	COMP **	[L]
-	CRV  *	[L]
-	SNX *	[L]
+	AAVE **	[L]  h
+	BAL		[L]
+	CEL  *		[L] 
+	COMP **	[L]  h
+	CRV  ***  	[L]  s
+	SNX *		[L]  m
 	YFI *	[L]
 	0x	[?]
 	
-	BAND *	[L]
+	BAND *		[L]
 	MAKER	[L]
 	
 	Uni 	[?]
@@ -19,6 +19,22 @@ DeFi
 	
 TOP
 	ETH
-	DOT
-	CREAM	[L]	
+	DOT***		m
+	CREAM*	[L]
 	
+	FUN *	[?]	u
+	MANA *** [?]   s
+	DATA **  [?]   s
+		
+	
+	
+	
+High Stable
+
+	DOT
+	AAVE
+	COMP	
+	THETA
+	FUN
+	CREAM
+

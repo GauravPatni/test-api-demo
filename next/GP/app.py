@@ -70,9 +70,13 @@ def calIn(trxIn):
 
     return totalVal
 
+def sortPara(val): 
+    return val[5]
+
 def getSelData(resp):
     global usdt
-
+    currList =[]
+    currNowList=[]
     filePath = r"data.json"
     with open(filePath, 'r') as file:  # file in local dir only
         userData = json.loads(file.read())
@@ -113,8 +117,16 @@ def getSelData(resp):
                 gain = 0
                 change =0
             port = port + nowVal
+            star = "* "* (int(gain/1000))
+            currNowList = [tag,last,qty,nowVal,change,gain,star]
+            
+            currList.append(currNowList)
+       
+        currList.sort(key=sortPara)
+        for currItem in currList:
             print(
-                f"{tag}  \t {round(last,3)}    \t {round(qty,3)}       \t {round(nowVal,3)}   \t {round(change,3)}     \t {round(gain,3)}")
+                f"{currItem[0]}  \t {round(currItem[1],3)}    \t {round(currItem[2],3)}       \t {round(currItem[3],3)}   \t {round(currItem[4],3)}     \t {round(currItem[5],3)}     \t {currItem[6]}")
+            
         # print("\n Gain ", adv)
         print(f"\n In {round(inVal,1)} \tPort {round(port,1)} \tDif {round((port - inVal),1)} \tGainCal {round(adv,1)} \tSl {(port - inVal)-adv}\n")
         calProf(userData)
