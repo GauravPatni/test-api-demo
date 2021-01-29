@@ -24,7 +24,7 @@ def calProf(data):
                 sum =sum+  (curr[tn][5] - curr[tn][3])*0.998
 
         prof = prof + sum   
-        print(f"{key} \t{round(sum,3)}")
+        # print(f"{key} \t{round(sum,3)}")
     
     print(f"--------------------------\ntotal  \t\t{round(prof,3)}")
 
